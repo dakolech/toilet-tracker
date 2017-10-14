@@ -2,9 +2,6 @@ import { combineReducers, applyMiddleware, createStore, compose } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 import reduxSaga from 'redux-saga';
-import { fork } from 'redux-saga/effects';
-import { counterSaga } from './counter/counter.saga';
-import { counterReducer as counter, CounterState, counterInitialState } from './counter/counter.reducer';
 import * as storage from 'redux-storage';
 import createEngine from 'redux-storage-engine-localstorage';
 import { apiMiddlewareCreator } from 'redux-middleware-api-fetch';
@@ -23,17 +20,14 @@ export const history = createBrowserHistory();
 const sagaMiddleware = reduxSaga();
 
 export interface AppState {
-  counter: CounterState;
 }
 
 export function configureStore() {
   const storeKey = 'react-starter';
 
   const initialState = {
-    counter: counterInitialState,
   };
   const reducer = storage.reducer(combineReducers({
-    counter,
     router: routerReducer,
   }));
 
@@ -60,7 +54,6 @@ export function configureStore() {
 
   function* rootSaga() {
     yield [
-      fork(counterSaga),
     ];
   }
 

@@ -10,7 +10,7 @@
   "author": "Daniel Koza <daniel.koza@briisk.co> (https://github.com/dakolech)",
   "scripts": {
     "init": "./copyEnvFiles.sh",
-    "start": "cp src/environments/environment.ts src/environments/index.ts && react-scripts-ts start",
+    "start": "cp src/environments/environment.ts src/environments/index.ts && concurrently --kill-others \"npm run watch-css\" \"react-scripts-ts start\"",
     "start:production": "cp src/environments/environment.prod.ts src/environments/index.ts &&  react-scripts-ts start",
     "build:production": "cp src/environments/environment.prod.ts src/environments/index.ts && react-scripts-ts build",
     "build:staging": "cp src/environments/environment.stag.ts src/environments/index.ts && react-scripts-ts build",
@@ -21,12 +21,16 @@
     "lint": "npm run lint:css && npm run lint:ts",
     "lint:ts": "tslint \"src/**/*.ts\" && tslint \"src/**/*.tsx\"",
     "lint:css": "stylelint 'src/**/*.tsx'",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "build-css": "node-sass-chokidar src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "chart.js": "^2.7.0",
     "font-awesome": "^4.7.0",
     "husky": "^0.14.3",
+    "node-sass-chokidar": "0.0.3",
     "ramda": "^0.24.1",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.3",
@@ -55,6 +59,7 @@
     "@types/redux": "^3.6.31",
     "@types/redux-mock-store": "0.0.10",
     "@types/redux-storage": "^4.0.7",
+    "concurrently": "^3.5.0",
     "enzyme": "^2.9.1",
     "jest": "^21.1.0",
     "react-scripts-ts": "^2.5.0",

@@ -1,0 +1,11 @@
+header {
+  background-color: rosybrown;
+  height: 200px; }
+
+main {
+  background-color: beige;
+  height: calc(100vh - 300px); }
+
+footer {
+  background-color: gold;
+  height: 100px; }
