@@ -70,14 +70,18 @@ export function fetchChartDataErrorReducer(state: MainState, action: Action): Ma
   };
 }
 
-export function mainReducer(state = mainInitialState, action: Action): MainState {
+function selectReducer(actionType: string) {
   const actionToReducerMap = {
     [FETCH_CHART_DATA]: fetchChartDataReducer,
     [FETCH_CHART_DATA_SUCCESS]: fetchChartDataSuccessReducer,
     [FETCH_CHART_DATA_ERROR]: fetchChartDataErrorReducer,
   };
 
-  const selectedReducer = actionToReducerMap[action.type];
+  const stateChangingFn = actionToReducerMap[actionType];
 
-  return selectedReducer != null ? selectedReducer(state, action) : state;
+  return stateChangingFn != null ? stateChangingFn : (state: MainState) => state;
+}
+
+export function mainReducer(state = mainInitialState, action: Action): MainState {
+  return selectReducer(action.type)(state, action);
 }
