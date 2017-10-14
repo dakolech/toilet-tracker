@@ -9,8 +9,6 @@
   },
   "author": "Daniel Koza <daniel.koza@briisk.co> (https://github.com/dakolech)",
   "scripts": {
-    "precommit": "npm run lint",
-    "prepush": "npm run test:ci",
     "init": "./copyEnvFiles.sh",
     "start": "cp src/environments/environment.ts src/environments/index.ts && react-scripts-ts start",
     "start:production": "cp src/environments/environment.prod.ts src/environments/index.ts &&  react-scripts-ts start",
