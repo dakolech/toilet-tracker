@@ -1,7 +1,10 @@
+import { MainState, mainInitialState, mainReducer } from './main/reducers/main.reducer';
+import { mainSaga } from './main/sagas/main.sagas';
 import { combineReducers, applyMiddleware, createStore, compose } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
 import reduxSaga from 'redux-saga';
+import { fork } from 'redux-saga/effects';
 import * as storage from 'redux-storage';
 import createEngine from 'redux-storage-engine-localstorage';
 import { apiMiddlewareCreator } from 'redux-middleware-api-fetch';
@@ -18,15 +21,19 @@ export const history = createBrowserHistory();
 const sagaMiddleware = reduxSaga();
 
 export interface AppState {
+  main: MainState;
 }
 
 export function configureStore() {
   const storeKey = 'react-starter';
 
   const initialState = {
+    main: mainInitialState,
   };
+
   const reducer = storage.reducer(combineReducers({
     router: routerReducer,
+    main: mainReducer,
   }));
 
   const devTools = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
@@ -35,9 +42,15 @@ export function configureStore() {
   const engine = createEngine(storeKey);
   const middleware = storage.createMiddleware(engine);
   const createStoreWithMiddleware = composeEnhancers(
-    applyMiddleware(...[routerMiddleware(history), sagaMiddleware, middleware, apiMiddleware]))(createStore);
+    applyMiddleware(...[
+      routerMiddleware(history),
+      sagaMiddleware,
+      middleware,
+      apiMiddleware,
+    ]))(createStore);
 
   const load = storage.createLoader(engine);
+
   const cachedStore = typeof window !== 'undefined'
     ? !!window.localStorage.getItem(storeKey)
     : false;
@@ -52,6 +65,7 @@ export function configureStore() {
 
   function* rootSaga() {
     yield [
+      fork(mainSaga),
     ];
   }
 
