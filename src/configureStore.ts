@@ -11,9 +11,7 @@ import { AppState } from './configureStore';
 
 const apiMiddleware = apiMiddlewareCreator({
   baseUrl: environment.URL,
-  headers: {
-    Authorization: ['counter', 'value'],
-  },
+  headers: {},
 });
 
 export const history = createBrowserHistory();
