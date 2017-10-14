@@ -3,6 +3,7 @@ import {
   FETCH_CHART_DATA_SUCCESS,
   FETCH_CHART_DATA_ERROR,
 } from './../actions/main.actions';
+
 export interface Action {
   type: string;
   payload?: any;
@@ -13,7 +14,7 @@ export interface WCStatus {
   'created-at': string;
 }
 
-export interface Model {
+export interface Data {
   id: string;
   type: string;
   attributes: WCStatus;
@@ -49,11 +50,15 @@ export function fetchChartDataReducer(state: MainState, action: Action): MainSta
 }
 
 export function fetchChartDataSuccessReducer(state: MainState, action: Action): MainState {
+  const data: Data[] = action.payload.data;
+
+  const model: WCStatus[] = data.map(({ attributes }) => attributes);
+
   return {
     ...state,
     fetchChartData: {
+      model,
       error: false,
-      model: action.payload.data,
       pending: false,
     },
   };
