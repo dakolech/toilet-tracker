@@ -49,3 +49,5 @@ src/environments/environment.prod.ts
 src/environments/environment.dev.ts
 src/environments/environment.stag.ts
 src/environments/index.ts
+
+src/**/*.css

@@ -5,13 +5,14 @@ import { bindActionCreators } from 'redux';
 import { fetchData } from './actions/main.actions';
 import { AppState } from '../configureStore';
 import { WCStatus } from './reducers/main.reducer';
+import { ChartComponent } from './components/chart.component';
 
 interface Props {
   model: WCStatus[];
 }
 
 function Main(props: Props) {
-  return (<div>{JSON.stringify(props.model)}</div>);
+  return (<ChartComponent data={props.model} />);
 }
 
 const mapStateToProps = (state: AppState) => ({ model: state.main.fetchChartData.model });
