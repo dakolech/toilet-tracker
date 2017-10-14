@@ -7,16 +7,10 @@ import { FooterComponent } from '../footer/footer.component';
 
 export function LayoutComponent() {
   return (
-    <div className="container">
-      <header className="row">
-        <HeaderComponent />
-      </header>
-      <main className="row">
-        <MainComponent />
-      </main>
-      <footer className="row">
-        <FooterComponent />
-      </footer>
+    <div>
+      <HeaderComponent />
+      <MainComponent />
+      <FooterComponent />
     </div>
   );
 }

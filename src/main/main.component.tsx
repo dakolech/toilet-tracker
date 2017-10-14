@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import './main.css';
 
 import { fetchData } from './actions/main.actions';
 import { AppState } from '../configureStore';
@@ -17,10 +18,12 @@ interface Props {
 
 function Main(props: Props) {
   return (
-    <div>
-      <DatePickerComponent data={props.model} />
-      <ChartComponent data={props.model} dates={props.selectedDates} dataSets={props.dataSets} />
-    </div>
+    <main>
+      <div className="container">
+        <DatePickerComponent data={props.model} />
+        <ChartComponent data={props.model} dates={props.selectedDates} dataSets={props.dataSets} />
+      </div>
+    </main>
   );
 }
 

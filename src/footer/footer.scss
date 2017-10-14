@@ -1,0 +1,18 @@
+footer {
+  height: 80px;
+  bottom: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color:#343a40;
+  color: #fff;
+
+  .footer-container {
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
