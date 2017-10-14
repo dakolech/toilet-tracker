@@ -11,6 +11,7 @@ import { apiMiddlewareCreator } from 'redux-middleware-api-fetch';
 
 import { environment } from './environments';
 import { AppState } from './configureStore';
+import { chartInitialState, chartReducer, ChartState } from './main/reducers/chart.reducer';
 
 const apiMiddleware = apiMiddlewareCreator({
   baseUrl: environment.URL,
@@ -22,6 +23,7 @@ const sagaMiddleware = reduxSaga();
 
 export interface AppState {
   main: MainState;
+  chart: ChartState;
 }
 
 export function configureStore() {
@@ -29,11 +31,13 @@ export function configureStore() {
 
   const initialState = {
     main: mainInitialState,
+    chart: chartInitialState,
   };
 
   const reducer = storage.reducer(combineReducers({
     router: routerReducer,
     main: mainReducer,
+    chart: chartReducer,
   }));
 
   const devTools = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
@@ -51,9 +55,7 @@ export function configureStore() {
 
   const load = storage.createLoader(engine);
 
-  const cachedStore = typeof window !== 'undefined'
-    ? !!window.localStorage.getItem(storeKey)
-    : false;
+  const cachedStore = false;
 
   const store = initialState && !cachedStore ?
     createStoreWithMiddleware(reducer, initialState) :
