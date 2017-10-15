@@ -16,13 +16,7 @@ export function ChartComponent(props: Props) {
   const datasets = props.dates
     .map((item) => {
       return {
-        data: props.data
-          .map(datum => moment(datum['created-at']))
-          .filter(date => date.format('dddd, MMMM Do YYYY') === item.date.format('dddd, MMMM Do YYYY'))
-          .reduce((acc: number[], item) => {
-            acc[item.hour()] += 1;
-            return acc;
-          }, Array.from({ length: 24 }).fill(0)),
+        data: props.dataSets[item.date.format('dddd, MMMM Do YYYY')],
         date: item,
       };
     })
@@ -39,27 +33,6 @@ export function ChartComponent(props: Props) {
     labels: hours,
 
     datasets,
-    // : [{
-    //   label: '# of Votes',
-    //   data,
-    //   backgroundColor: [
-    //     'rgba(54, 162, 235, 0.2)',
-    //   ],
-    //   borderColor: [
-    //     '#123456',
-    //   ],
-    //   borderWidth: 1
-    // }, {
-    //   label: '# of Votes2',
-    //   data,
-    //   backgroundColor: [
-    //     'rgba(255, 99, 132, 0.2)',
-    //   ],
-    //   borderColor: [
-    //     'rgba(255,99,132,1)'
-    //   ],
-    //   borderWidth: 1
-    // }]
   };
 
   return (

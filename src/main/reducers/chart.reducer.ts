@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { SELECT_DATE } from '../actions/chart.actions';
+import { PREPARE_DATA, SELECT_DATE } from '../actions/chart.actions';
 
 export interface Action {
   type: string;
@@ -34,10 +34,17 @@ export function selectDateReducer(state: ChartState, action: Action): ChartState
   };
 }
 
+export function savePreparedData(state: ChartState, action: Action): ChartState {
+  return {
+    ...state,
+    dataSets: action.payload
+  };
+}
 
 function selectReducer(actionType: string) {
   const actionToReducerMap = {
     [SELECT_DATE]: selectDateReducer,
+    [PREPARE_DATA]: savePreparedData,
   };
 
   const stateChangingFn = actionToReducerMap[actionType];
