@@ -4,11 +4,11 @@ import { bindActionCreators } from 'redux';
 
 import { AppState } from '../../configureStore';
 import { WCStatus } from '../reducers/main.reducer';
-import { selectDate } from '../actions/chart.actions';
+import { changeColor, selectDate } from '../actions/chart.actions';
 import { Action, SelectedDate } from '../reducers/chart.reducer';
 import * as moment from 'moment';
 import { uniq } from 'ramda';
-// import { SliderPicker } from 'react-color';
+import { SliderPicker } from 'react-color';
 import './datePicker.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -19,7 +19,8 @@ interface OwnProps {
 
 interface StateProps {
   selectDate: (payload: SelectedDate) => Action;
-  selectedDates: moment.Moment;
+  selectedDates: any[];
+  changeColor: (payload: any) => Action
 }
 
 class DatePickerLocal extends React.Component<OwnProps&StateProps> {
@@ -29,6 +30,10 @@ class DatePickerLocal extends React.Component<OwnProps&StateProps> {
       date: moment(date),
       color: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, `,
     });
+  }
+
+  handleChangeComplete(color: any, item: any) {
+    this.props.changeColor({ color: `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, `, date: moment(item.date) })
   }
 
   render(): any {
@@ -44,13 +49,19 @@ class DatePickerLocal extends React.Component<OwnProps&StateProps> {
           onChange={this.handleChange.bind(this)}
           includeDates={dates}
         />
-        {/*<SliderPicker onChangeComplete={this.handleChangeComplete} />*/}
+        {this.props.selectedDates.map((item, index) =>(
+          <div key={index} className="color-picker">
+            <span>{moment(item.date).format('dddd, MMMM Do YYYY')}</span>
+            <SliderPicker color={item.color + '1)'} onChangeComplete={(color) => this.handleChangeComplete(color, item)} />
+            <div className="show-color" style={{'background-color': `${item.color} 1)`}}></div>
+          </div>
+        ))}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state: AppState): any => ({ selectedDates: state.chart.selectedDates });
-const mapDispatchToProps = (dispatch: Dispatch<AppState>) => bindActionCreators({ selectDate }, dispatch);
+const mapDispatchToProps = (dispatch: Dispatch<AppState>) => bindActionCreators({ selectDate, changeColor }, dispatch);
 
 export const DatePickerComponent = connect<StateProps, any, any>(mapStateToProps, mapDispatchToProps)(DatePickerLocal);
