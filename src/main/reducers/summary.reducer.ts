@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { pathOr } from 'ramda';
 import {
   SELECT_START_DATE,
   SELECT_END_DATE,
@@ -23,8 +24,10 @@ export interface SummaryReq {
   endDate: momentDate;
 }
 
+type SummaryReducer = (state: SummaryState, action: Action) => SummaryState;
+
 export interface ActionToReducerMap {
-  [key: string]: (state: SummaryState, action: Action) => SummaryState;
+  [key: string]: SummaryReducer;
 }
 
 export interface SummaryState {
@@ -53,61 +56,52 @@ export const summaryInitialState: SummaryState = {
   },
 };
 
-function selectStartDateReducer(state: SummaryState, action: Action): SummaryState {
-  return {
-    ...state,
-    dates: {
-      ...state.dates,
-      startDate: action.payload,
-    },
-  };
-}
+const selectStartDateReducer: SummaryReducer = (state, action) => ({
+  ...state,
+  dates: {
+    ...state.dates,
+    startDate: action.payload,
+  },
+});
 
-function selectEndDateReducer(state: SummaryState, action: Action): SummaryState {
-  return {
-    ...state,
-    dates: {
-      ...state.dates,
-      endDate: action.payload,
-    },
-  };
-}
+const selectEndDateReducer: SummaryReducer = (state, action) => ({
+  ...state,
+  dates: {
+    ...state.dates,
+    endDate: action.payload,
+  },
+});
 
-function getSummaryReducer(state: SummaryState, action: Action): SummaryState {
-  return {
-    ...state,
-    getSummary: {
-      error: false,
-      pending: true,
-      model: state.getSummary.model,
-    },
-  };
-}
+const getSummaryReducer: SummaryReducer = (state, action) => ({
+  ...state,
+  getSummary: {
+    error: false,
+    pending: true,
+    model: state.getSummary.model,
+  },
+});
 
-function getSummarySuccessReducer(state: SummaryState, action: Action): SummaryState {
-  const totalMin = action.payload.meta['total-min'];
-  return {
-    ...state,
-    getSummary: {
-      error: false,
-      pending: false,
-      model: { totalMin },
+const getSummarySuccessReducer: SummaryReducer = (state, action) => ({
+  ...state,
+  getSummary: {
+    error: false,
+    pending: false,
+    model: {
+      totalMin: pathOr(0, [ 'payload', 'meta', 'total-min' ], action),
     },
-  };
-}
+  },
+});
 
-function getSummaryErrorReducer(state: SummaryState, action: Action): SummaryState {
-  return {
-    ...state,
-    getSummary: {
-      error: true,
-      pending: false,
-      model: state.getSummary.model,
-    },
-  };
-}
+const getSummaryErrorReducer: SummaryReducer = (state, action) => ({
+  ...state,
+  getSummary: {
+    error: true,
+    pending: false,
+    model: state.getSummary.model,
+  },
+});
 
-const actionToReducerMap: ActionToReducerMap = {
+const actionToReducerMap = {
   [SELECT_START_DATE]: selectStartDateReducer,
   [SELECT_END_DATE]: selectEndDateReducer,
   [GET_SUMMARY]: getSummaryReducer,
@@ -115,10 +109,11 @@ const actionToReducerMap: ActionToReducerMap = {
   [GET_SUMMARY_ERROR]: getSummaryErrorReducer,
 };
 
-function selectReducer(actionToReducerObj: ActionToReducerMap, actionType: string) {
-  const stateChangingFn = actionToReducerObj[actionType];
-  return stateChangingFn != null ? stateChangingFn : (state: SummaryState, _: Action) => state;
-}
+const selectReducer = (actionToReducerObj: ActionToReducerMap, actionType: string): SummaryReducer => {
+  const selectedReducer: SummaryReducer = actionToReducerObj[actionType];
+  const identityReducer: SummaryReducer = (state, _) => state;
+  return selectedReducer != null ? selectedReducer : identityReducer;
+};
 
 export function summaryReducer(state = summaryInitialState, action: Action): SummaryState {
   const reducer = selectReducer(actionToReducerMap, action.type);

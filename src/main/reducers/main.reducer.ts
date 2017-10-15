@@ -3,6 +3,7 @@ import {
   FETCH_CHART_DATA_SUCCESS,
   FETCH_CHART_DATA_ERROR,
 } from './../actions/main.actions';
+import { pathOr } from 'ramda';
 
 export interface Action {
   type: string;
@@ -50,7 +51,7 @@ export function fetchChartDataReducer(state: MainState, action: Action): MainSta
 }
 
 export function fetchChartDataSuccessReducer(state: MainState, action: Action): MainState {
-  const data: Data[] = action.payload.data;
+  const data: Data[] = pathOr([{}], [ 'payload', 'data' ], action);
 
   const model: WCStatus[] = data.map(({ attributes }) => attributes);
 
