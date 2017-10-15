@@ -1,5 +1,6 @@
 import { MainState, mainInitialState, mainReducer } from './main/reducers/main.reducer';
 import { mainSaga } from './main/sagas/main.sagas';
+import { summarySaga } from './main/sagas/summary.sagas';
 import { combineReducers, applyMiddleware, createStore, compose } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createBrowserHistory from 'history/createBrowserHistory';
@@ -12,6 +13,7 @@ import { apiMiddlewareCreator } from 'redux-middleware-api-fetch';
 import { environment } from './environments';
 import { AppState } from './configureStore';
 import { chartInitialState, chartReducer, ChartState } from './main/reducers/chart.reducer';
+import { summaryInitialState, summaryReducer, SummaryState } from './main/reducers/summary.reducer';
 
 const apiMiddleware = apiMiddlewareCreator({
   baseUrl: environment.URL,
@@ -24,6 +26,7 @@ const sagaMiddleware = reduxSaga();
 export interface AppState {
   main: MainState;
   chart: ChartState;
+  summary: SummaryState;
 }
 
 export function configureStore() {
@@ -32,12 +35,14 @@ export function configureStore() {
   const initialState = {
     main: mainInitialState,
     chart: chartInitialState,
+    summary: summaryInitialState,
   };
 
   const reducer = storage.reducer(combineReducers({
     router: routerReducer,
     main: mainReducer,
     chart: chartReducer,
+    summary: summaryReducer,
   }));
 
   const devTools = '__REDUX_DEVTOOLS_EXTENSION_COMPOSE__';
@@ -68,6 +73,7 @@ export function configureStore() {
   function* rootSaga() {
     yield [
       fork(mainSaga),
+      fork(summarySaga),
     ];
   }
 

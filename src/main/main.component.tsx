@@ -8,6 +8,7 @@ import { AppState } from '../configureStore';
 import { WCStatus } from './reducers/main.reducer';
 import { ChartComponent } from './components/chart.component';
 import { DatePickerComponent } from './components/datePicker.component';
+import { SummaryComponent } from './components/summary.component';
 import { SelectedDate } from './reducers/chart.reducer';
 
 interface Props {
@@ -22,6 +23,7 @@ function Main(props: Props) {
       <div className="container">
         <DatePickerComponent data={props.model} />
         <ChartComponent data={props.model} dates={props.selectedDates} dataSets={props.dataSets} />
+        <SummaryComponent />
       </div>
     </main>
   );
