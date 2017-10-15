@@ -3,6 +3,11 @@ import { WCStatus } from '../reducers/main.reducer';
 import { Line } from 'react-chartjs-2';
 import * as moment from 'moment';
 import { SelectedDate } from '../reducers/chart.reducer';
+// const icon = require('../../poop.png');
+const icon = new Image();
+icon.src ='https://cdn.shopify.com/s/files/1/1061/1924/products/Poop_Emoji_7b204f05-eec6-4496-91b1-351acc03d2c7_large.png?v=1480481059';
+icon.height = 20;
+icon.width = 20;
 
 interface Props {
   data: WCStatus[];
@@ -26,7 +31,8 @@ export function ChartComponent(props: Props) {
         data: item.data,
         borderColor: `${item.date.color} 1)`,
         backgroundColor: `${item.date.color} 0.2)`,
-        borderWidth: 1
+        borderWidth: 1,
+        pointStyle: icon,
       })
     });
   const chartData = {
@@ -36,6 +42,6 @@ export function ChartComponent(props: Props) {
   };
 
   return (
-    <Line data={chartData} width={600} height={250}/>
+    <Line data={chartData as any} width={600} height={250}/>
   );
 }

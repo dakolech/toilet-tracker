@@ -18,7 +18,7 @@ export interface ChartState {
 
 export const chartInitialState: ChartState = {
   selectedDates: [{
-    date: moment(),
+    date: moment('10.08.2017'),
     color: 'rgba(255,99,132,'
   }],
   dataSets: {},
