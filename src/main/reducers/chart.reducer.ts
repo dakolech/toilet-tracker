@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { PREPARE_DATA, SELECT_DATE } from '../actions/chart.actions';
+import { CHANGE_COLOR, PREPARE_DATA, SELECT_DATE } from '../actions/chart.actions';
 
 export interface Action {
   type: string;
@@ -41,10 +41,23 @@ export function savePreparedData(state: ChartState, action: Action): ChartState 
   };
 }
 
+export function changeColor(state: ChartState, action: Action): ChartState {
+  return {
+    ...state,
+    selectedDates: state.selectedDates.map(item => {
+      if (item.date.format('dddd, MMMM Do YYYY') === action.payload.date.format('dddd, MMMM Do YYYY')) {
+        item.color = action.payload.color;
+      }
+      return item;
+    })
+  };
+}
+
 function selectReducer(actionType: string) {
   const actionToReducerMap = {
     [SELECT_DATE]: selectDateReducer,
     [PREPARE_DATA]: savePreparedData,
+    [CHANGE_COLOR]: changeColor,
   };
 
   const stateChangingFn = actionToReducerMap[actionType];
